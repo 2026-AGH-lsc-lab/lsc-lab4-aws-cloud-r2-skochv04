@@ -1,0 +1,44 @@
+=== Lambda ZIP ===
+skochv04@WS-PF57K64L:/mnt/c/skochv04/AGH/8 semestr/LSC/4/lsc-lab4-aws-cloud-r2-skochv04$ aws lambda invoke --function-name lsc-knn-zip \
+  --cli-binary-format raw-in-base64-out \
+  --payload "$(python3 -c 'import json; q=json.load(open("loadtest/query.json")); print(json.dumps({"body": json.dumps(q)}))')" \
+  /tmp/out-zip.json
+
+cat /tmp/out-zip.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "X-Server-Time-Ms": "71.205", "X-Instance-Id": "2026/03/28/[$LATEST]aacef51c9acf4dd7b69f1e5994e7f963", "X-Cold-Start": "true"}, "body": "{\"results\": [{\"index\": 35859, \"distance\": 12.001459121704102}, {\"index\": 24682, \"distance\": 12.059946060180664}, {\"index\": 35397, \"distance\": 12.487079620361328}, {\"index\": 20160, \"distance\": 12.489519119262695}, {\"index\": 30454, \"distance\": 12.499402046203613}], \"query_time_ms\": 71.205, \"instance_id\": \"2026/03/28/[$LATEST]aacef51c9acf4dd7b69f1e5994e7f963\", \"cold_start\": true}"}
+
+
+
+=== Lambda CONTAINER ===
+skochv04@WS-PF57K64L:/mnt/c/skochv04/AGH/8 semestr/LSC/4/lsc-lab4-aws-cloud-r2-skochv04$ aws lambda invoke --function-name lsc-knn-container \
+  --cli-binary-format raw-in-base64-out \
+  --payload "$(python3 -c 'import json; q=json.load(open("loadtest/query.json")); print(json.dumps({"body": json.dumps(q)}))')" \
+  /tmp/out-container.json
+
+cat /tmp/out-container.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "X-Server-Time-Ms": "72.333", "X-Instance-Id": "2026/03/28/[$LATEST]d359365c32ad412ea3a11f77741ef563", "X-Cold-Start": "false"}, "body": "{\"results\": [{\"index\": 35859, \"distance\": 12.001459121704102}, {\"index\": 24682, \"distance\": 12.059946060180664}, {\"index\": 35397, \"distance\": 12.487079620361328}, {\"index\": 20160, \"distance\": 12.489519119262695}, {\"index\": 30454, \"distance\": 12.499402046203613}], \"query_time_ms\": 72.333, \"instance_id\": \"2026/03/28/[$LATEST]d359365c32ad412ea3a11f77741ef563\", \"cold_start\": false}"}
+
+
+
+=== Fargate ===
+skochv04@WS-PF57K64L:/mnt/c/skochv04/AGH/8 semestr/LSC/4/lsc-lab4-aws-cloud-r2-skochv04$ curl -X POST -H "Content-Type: application/json" -d @loadtest/query.json \
+  http://lsc-knn-alb-905691877.us-east-1.elb.amazonaws.com/search
+{"instance_id":"ip-172-31-54-232.ec2.internal","query_time_ms":23.045,"results":[{"distance":12.001459121704102,"index":35859},{"distance":12.059946060180664,"index":24682},{"distance":12.487079620361328,"index":35397},{"distance":12.489519119262695,"index":20160},{"distance":12.499402046203613,"index":30454}]}
+
+
+
+=== EC2 ===
+skochv04@WS-PF57K64L:/mnt/c/skochv04/AGH/8 semestr/LSC/4/lsc-lab4-aws-cloud-r2-skochv04$ curl -X POST -H "Content-Type: application/json" -d @loadtest/query.json \
+  http://34.204.176.5:8080/search
+{"instance_id":"253c429f6499","query_time_ms":23.093,"results":[{"distance":12.001459121704102,"index":35859},{"distance":12.059946060180664,"index":24682},{"distance":12.487079620361328,"index":35397},{"distance":12.489519119262695,"index":20160},{"distance":12.499402046203613,"index":30454}]}
+
+
+

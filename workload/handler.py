@@ -18,14 +18,22 @@ def lambda_handler(event, context):
     is_cold = COLD_START
     COLD_START = False
 
-    # Parse body from Function URL event
-    body = event.get("body", "{}")
-    if event.get("isBase64Encoded", False):
-        import base64
-        body = base64.b64decode(body).decode("utf-8")
-    data = json.loads(body)
 
-    query = np.array(data["query"], dtype=np.float32)
+    if "body" in event:
+        body = event["body"]
+        if event.get("isBase64Encoded", False):
+            import base64
+            body = base64.b64decode(body).decode("utf-8")
+        data = json.loads(body)
+    else:
+        data = event
+
+    if isinstance(data, dict):
+        query_data = data["query"]
+    else:
+        # assume raw JSON array
+        query_data = data
+    query = np.array(query_data, dtype=np.float32)
 
     start = time.perf_counter()
     dists = np.linalg.norm(DATASET - query, axis=1)

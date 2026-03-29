@@ -1,0 +1,4 @@
+Lambda zip server-side query_time_ms: 119.163
+Lambda container server-side query_time_ms: 74.107
+Fargate server-side query_time_ms: 24.001
+EC2 server-side query_time_ms: 23.43

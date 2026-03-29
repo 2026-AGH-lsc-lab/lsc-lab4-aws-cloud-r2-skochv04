@@ -1,0 +1,3 @@
+REPORT RequestId: 1c78b60f-90a7-4a91-b0ce-ddb0e798ee69	Duration: 76.27 ms	Billed Duration: 735 ms	Memory Size: 512 MB	Max Memory Used: 143 MB	Init Duration: 657.86 ms	
+XRAY TraceId: 1-69c7d925-26bb6ebc778532ac30ec1a00	SegmentId: d760387b6e9bc662	Sampled: true	
+
